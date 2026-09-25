@@ -165,7 +165,7 @@ export async function checkBackend(): Promise<ServiceCheckResult> {
         status: "red",
         latencyMs,
         lastChecked: new Date().toISOString(),
-        errorMessage: `Respuesta invÃ¡lida: ok=${json.ok}, service=${json.service}`,
+        errorMessage: `Respuesta inválida: ok=${json.ok}, service=${json.service}`,
         details: { endpoint, meta: json },
       };
     }
@@ -177,7 +177,7 @@ export async function checkBackend(): Promise<ServiceCheckResult> {
       status: "red",
       latencyMs,
       lastChecked: new Date().toISOString(),
-      errorMessage: `JSON invÃ¡lido en /health: ${err instanceof Error ? err.message : "parse error"}`,
+      errorMessage: `JSON inválido en /health: ${err instanceof Error ? err.message : "parse error"}`,
       details: { endpoint },
     };
   }
@@ -240,7 +240,7 @@ export async function checkFrontend(): Promise<ServiceCheckResult> {
       status: "red",
       latencyMs,
       lastChecked: new Date().toISOString(),
-      errorMessage: "HTML no referencia un bundle /assets/index-*.js vÃ¡lido",
+      errorMessage: "HTML no referencia un bundle /assets/index-*.js válido",
       details: { endpoint, meta: { htmlSnippet: html.substring(0, 250) } },
     };
   }
@@ -256,7 +256,7 @@ export async function checkFrontend(): Promise<ServiceCheckResult> {
       status: "red",
       latencyMs: latencyMs + bundleCheck.latencyMs,
       lastChecked: new Date().toISOString(),
-      errorMessage: `Bundle ${bundleMatch[0]} devolviÃ³ error: ${bundleCheck.error || `HTTP ${bundleCheck.res?.status}`}`,
+      errorMessage: `Bundle ${bundleMatch[0]} devolvió error: ${bundleCheck.error || `HTTP ${bundleCheck.res?.status}`}`,
       details: { endpoint, meta: { bundleUrl, bundleStatus: bundleCheck.res?.status } },
     };
   }
@@ -308,13 +308,13 @@ export async function checkDomains(): Promise<ServiceCheckResult> {
   } else if (!wwwTls.valid) {
     wwwStatus = "red";
     wwwDetail += ` | TLS error: ${wwwTls.error}`;
-    updateStatus("red", `www.cubecanvas.com TLS invÃ¡lido: ${wwwTls.error}`);
+    updateStatus("red", `www.cubecanvas.com TLS inválido: ${wwwTls.error}`);
   } else if (wwwTls.daysRemaining < 14) {
     wwwStatus = "yellow";
-    wwwDetail += ` | TLS vence en ${wwwTls.daysRemaining} dÃ­as`;
-    updateStatus("yellow", `www.cubecanvas.com certificado vence pronto (${wwwTls.daysRemaining} dÃ­as)`);
+    wwwDetail += ` | TLS vence en ${wwwTls.daysRemaining} días`;
+    updateStatus("yellow", `www.cubecanvas.com certificado vence pronto (${wwwTls.daysRemaining} días)`);
   } else {
-    wwwDetail += ` | TLS vÃ¡lido (${wwwTls.daysRemaining} dÃ­as)`;
+    wwwDetail += ` | TLS válido (${wwwTls.daysRemaining} días)`;
   }
 
   subChecks.push({
@@ -341,13 +341,13 @@ export async function checkDomains(): Promise<ServiceCheckResult> {
   } else if (!appTls.valid) {
     appStatus = "red";
     appDetail += ` | TLS error: ${appTls.error}`;
-    updateStatus("red", `app.cubecanvas.com TLS invÃ¡lido: ${appTls.error}`);
+    updateStatus("red", `app.cubecanvas.com TLS inválido: ${appTls.error}`);
   } else if (appTls.daysRemaining < 14) {
     appStatus = "yellow";
-    appDetail += ` | TLS vence en ${appTls.daysRemaining} dÃ­as`;
-    updateStatus("yellow", `app.cubecanvas.com certificado vence pronto (${appTls.daysRemaining} dÃ­as)`);
+    appDetail += ` | TLS vence en ${appTls.daysRemaining} días`;
+    updateStatus("yellow", `app.cubecanvas.com certificado vence pronto (${appTls.daysRemaining} días)`);
   } else {
-    appDetail += ` | TLS vÃ¡lido (${appTls.daysRemaining} dÃ­as)`;
+    appDetail += ` | TLS válido (${appTls.daysRemaining} días)`;
   }
 
   subChecks.push({
@@ -363,7 +363,7 @@ export async function checkDomains(): Promise<ServiceCheckResult> {
   totalLatency += apexCheck.latencyMs;
   const apexStatus: HealthStatus = apexCheck.res?.status === 200 ? "green" : "red";
   if (apexStatus !== "green") {
-    updateStatus("red", `cubecanvas.com devolviÃ³ ${apexCheck.error || `HTTP ${apexCheck.res?.status}`}`);
+    updateStatus("red", `cubecanvas.com devolvió ${apexCheck.error || `HTTP ${apexCheck.res?.status}`}`);
   }
   subChecks.push({
     name: "cubecanvas.com (apex)",
@@ -378,7 +378,7 @@ export async function checkDomains(): Promise<ServiceCheckResult> {
   totalLatency += privacyCheck.latencyMs;
   const privacyStatus: HealthStatus = privacyCheck.res?.status === 200 ? "green" : "red";
   if (privacyStatus !== "green") {
-    updateStatus("red", `cubecanvas.com/privacy.html devolviÃ³ ${privacyCheck.error || `HTTP ${privacyCheck.res?.status}`}`);
+    updateStatus("red", `cubecanvas.com/privacy.html devolvió ${privacyCheck.error || `HTTP ${privacyCheck.res?.status}`}`);
   }
   subChecks.push({
     name: "cubecanvas.com/privacy.html",
@@ -443,7 +443,7 @@ export async function checkSupabase(): Promise<ServiceCheckResult> {
 
     if (pingError && !pingError.message.includes("relation") && !pingError.message.includes("does not exist")) {
       worstStatus = "red";
-      firstError = `ConexiÃ³n fallida: ${pingError.message}`;
+      firstError = `Conexión fallida: ${pingError.message}`;
       subChecks.push({ name: "Conectividad", status: "red", latencyMs, error: pingError.message });
     } else {
       const connStatus: HealthStatus = latencyMs > 2000 ? "yellow" : "green";
@@ -683,7 +683,7 @@ export async function checkWhatsApp(): Promise<ServiceCheckResult> {
 
   if (hookError || !hookRes) {
     worstStatus = "red";
-    const err = `Webhook handshake error: ${hookError || "ConexiÃ³n fallida"}`;
+    const err = `Webhook handshake error: ${hookError || "Conexión fallida"}`;
     if (!firstError) firstError = err;
     subChecks.push({
       name: "Webhook Handshake (hub.challenge)",
@@ -693,7 +693,7 @@ export async function checkWhatsApp(): Promise<ServiceCheckResult> {
     });
   } else if (hookRes.status !== 200) {
     worstStatus = "red";
-    const err = `Webhook respondiÃ³ HTTP ${hookRes.status}`;
+    const err = `Webhook respondió HTTP ${hookRes.status}`;
     if (!firstError) firstError = err;
     subChecks.push({
       name: "Webhook Handshake (hub.challenge)",
@@ -709,11 +709,11 @@ export async function checkWhatsApp(): Promise<ServiceCheckResult> {
           name: "Webhook Handshake (hub.challenge)",
           status: hookLatency > 2000 ? "yellow" : "green",
           latencyMs: hookLatency,
-          details: "RespondiÃ³ handshake correctamente",
+          details: "Respondió handshake correctamente",
         });
       } else {
         worstStatus = "red";
-        const err = "Webhook respondiÃ³ 200 pero no devolviÃ³ el hub.challenge";
+        const err = "Webhook respondió 200 pero no devolvió el hub.challenge";
         if (!firstError) firstError = err;
         subChecks.push({
           name: "Webhook Handshake (hub.challenge)",
@@ -793,11 +793,11 @@ export async function checkWompi(): Promise<ServiceCheckResult> {
 
     if (error || !res || res.status !== 200) {
       worstStatus = "red";
-      const err = `ProducciÃ³n Wompi error: ${error || `HTTP ${res?.status}`}`;
+      const err = `Producción Wompi error: ${error || `HTTP ${res?.status}`}`;
       if (!firstError) firstError = err;
-      subChecks.push({ name: "Wompi ProducciÃ³n", status: "red", latencyMs, error: err });
+      subChecks.push({ name: "Wompi Producción", status: "red", latencyMs, error: err });
     } else {
-      subChecks.push({ name: "Wompi ProducciÃ³n", status: latencyMs > 2000 ? "yellow" : "green", latencyMs, details: "Comercio verificado en producciÃ³n" });
+      subChecks.push({ name: "Wompi Producción", status: latencyMs > 2000 ? "yellow" : "green", latencyMs, details: "Comercio verificado en producción" });
     }
   }
 
@@ -843,7 +843,7 @@ export async function checkResend(): Promise<ServiceCheckResult> {
       status: "red",
       latencyMs,
       lastChecked: new Date().toISOString(),
-      errorMessage: error || "ConexiÃ³n a Resend fallida",
+      errorMessage: error || "Conexión a Resend fallida",
       details: { endpoint },
     };
   }
@@ -856,7 +856,7 @@ export async function checkResend(): Promise<ServiceCheckResult> {
       status: "red",
       latencyMs,
       lastChecked: new Date().toISOString(),
-      errorMessage: `Resend API devolviÃ³ HTTP ${res.status}`,
+      errorMessage: `Resend API devolvió HTTP ${res.status}`,
       details: { endpoint, meta: { httpStatus: res.status } },
     };
   }
@@ -867,7 +867,7 @@ export async function checkResend(): Promise<ServiceCheckResult> {
     const hasVerifiedDomain = domains.some((d: { status: string }) => d.status === "verified");
 
     const status: HealthStatus = hasVerifiedDomain ? (latencyMs > 2000 ? "yellow" : "green") : "yellow";
-    const errorMessage = !hasVerifiedDomain ? "NingÃºn dominio figura con estado 'verified'" : undefined;
+    const errorMessage = !hasVerifiedDomain ? "Ningún dominio figura con estado 'verified'" : undefined;
 
     return {
       key: "resend",
@@ -919,7 +919,7 @@ export async function checkExternal(): Promise<ServiceCheckResult> {
   totalLatency += calCheck.latencyMs;
   const calStatus: HealthStatus = calCheck.res?.status === 200 ? "green" : "red";
   if (calStatus !== "green") {
-    updateStatus("red", `Calendly devolviÃ³ ${calCheck.error || `HTTP ${calCheck.res?.status}`}`);
+    updateStatus("red", `Calendly devolvió ${calCheck.error || `HTTP ${calCheck.res?.status}`}`);
   }
   subChecks.push({
     name: "Calendly (admin-cubecanvas/30min)",
@@ -935,7 +935,7 @@ export async function checkExternal(): Promise<ServiceCheckResult> {
   totalLatency += appCheck.latencyMs;
   const appStatus: HealthStatus = appCheck.res?.status === 200 ? "green" : "red";
   if (appStatus !== "green") {
-    updateStatus("red", `app.cubecanvas.com devolviÃ³ ${appCheck.error || `HTTP ${appCheck.res?.status}`}`);
+    updateStatus("red", `app.cubecanvas.com devolvió ${appCheck.error || `HTTP ${appCheck.res?.status}`}`);
   }
   subChecks.push({
     name: "Web App (app.cubecanvas.com)",
